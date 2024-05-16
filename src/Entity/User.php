@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,6 +36,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     private string $password;
+
+    #[ORM\ManyToMany(targetEntity: StudyClass::class, inversedBy: "users")]
+    private ArrayCollection $studyClasses;
+
+    public function __construct()
+    {
+        $this->studyClasses = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -70,6 +80,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return Collection|StudyClass[]
+     */
+    public function getStudyClasses(): Collection
+    {
+        return $this->studyClasses;
+    }
+
+    public function addStudyClass(StudyClass $studyClass): self
+    {
+        if (!$this->studyClasses->contains($studyClass)) {
+            $this->studyClasses[] = $studyClass;
+        }
+        return $this;
+    }
+
+    public function removeStudyClass(StudyClass $studyClass): self
+    {
+        $this->studyClasses->removeElement($studyClass);
         return $this;
     }
 

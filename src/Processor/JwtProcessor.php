@@ -57,7 +57,7 @@ class JwtProcessor
     /**
      * {@inheritdoc}
      */
-    public function decode($token)
+    public function decode($token): UnencryptedToken
     {
         $parser = new Parser(new JoseEncoder());
 
@@ -68,6 +68,6 @@ class JwtProcessor
         }
         assert($token instanceof UnencryptedToken);
         
-        return $token->claims()->get('sub');
+        return $token;
     }
 }
