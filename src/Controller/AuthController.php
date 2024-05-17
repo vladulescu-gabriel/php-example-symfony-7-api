@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Exception\RequestException;
 use App\Service\AuthService;
 use App\Service\UserService;
+use App\Validator\LoginValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,7 +17,8 @@ class AuthController extends AbstractController
 {
     public function __construct(
         private AuthService $authService,
-        private UserService $userService
+        private UserService $userService,
+        private LoginValidator $loginValidator
     ) {
     }
 
@@ -38,10 +40,13 @@ class AuthController extends AbstractController
     }
 
     #[Route('/signin', methods: ['POST'])]
-    public function number(): Response
+    public function login(Request $request): Response
     {
-        $number = random_int(0, 100);
+        $user = $this->loginValidator->validate($request);
+        $token = $this->authService->setAuthUser($user);
 
-        return ResponseProcessor::send('number is:'. $number);
+        return ResponseProcessor::send([
+            "AuthToken" => $token
+        ]);
     }
 }

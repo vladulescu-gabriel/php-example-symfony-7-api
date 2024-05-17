@@ -18,8 +18,9 @@ class LoginValidator
     
     public function validate(Request $request): UserInterface
     {
-        $login = $request->getPayload()->get('login');
-        $password = $request->getPayload()->get('password');
+        $data = json_decode($request->getContent());
+        $login = $data->login;
+        $password = $data->password;
         
         if (!$password || !$login) {
             throw new Exception('Authentication data not provided');

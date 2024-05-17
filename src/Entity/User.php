@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -38,11 +38,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\ManyToMany(targetEntity: StudyClass::class, inversedBy: "users")]
-    private ArrayCollection $studyClasses;
+    private PersistentCollection $studyClasses;
+
+    #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: "users")]
+    private Role $role;
 
     public function __construct()
     {
-        $this->studyClasses = new ArrayCollection();
+        //$this->studyClasses = new ArrayCollection();
     }
 
     public function getId(): int
@@ -84,9 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|StudyClass[]
+     * @return PersistentCollection|StudyClass[]
      */
-    public function getStudyClasses(): Collection
+    public function getStudyClasses(): PersistentCollection
     {
         return $this->studyClasses;
     }
@@ -113,4 +116,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void {}
     public function getRoles(): array { return []; }
+
+    public function setRole(Role $role): self
+    {
+        $this->role = $role;
+        return $this;
+    }
 }
