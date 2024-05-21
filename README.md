@@ -1,9 +1,9 @@
 ### php-example-symfony-7-api
 
-> [!IMPORTANT]
-> Use installation guide in order to got the project working
-> Keep in mind that this is a test-project of symfony 7, structure may not be the best
-
+> [!CAUTION]
+> 1. Use installation guide in order to got the project working
+> 2. Keep in mind that this is a test-project of symfony 7, structure may not be the best
+------
 > [!NOTE]
 > Installation guide
 
@@ -18,3 +18,4 @@ Steps after software install:
 1. Run command: make composer/install
 2. Add to hosts: local.api.symfony7.com (Windows: C:\Windows\System32\drivers\etc\hosts)
 3. Run command: make project/start
+------
