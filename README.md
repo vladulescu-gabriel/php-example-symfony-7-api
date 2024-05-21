@@ -33,6 +33,7 @@ Steps after software install:
 > Routes Table
 
 * Routes Info table
+
 | Route                                 | Method    | Required Permission                       | Requires Auth Token   |
 | ------------------------------------- | --------- | ----------------------------------------- | --------------------- |
 | /signin                               | POST      | NO                                        | NO                    |
@@ -51,6 +52,7 @@ Steps after software install:
 | /api/study-classes/{classId}/students | DELETE    | ACCESS_REMOVE_STUDENTS_FROM_STUDY_CLASS   | YES                   |
 
 * Request data for routes
+
 | Route                                 | Body Data                                                                                 |
 | ------------------------------------- | ----------------------------------------------------------------------------------------- |
 | /signin                               | ```json {"login": "username or email", "password": "password"} ```                        |
