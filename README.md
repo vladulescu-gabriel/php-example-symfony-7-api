@@ -31,6 +31,7 @@ Steps after software install:
 ------
 > [!NOTE]
 > Routes Table
+
 | Route                                 | Method    | Required Permission                       | Requires Auth Token   |
 | ------------------------------------- | --------- | ----------------------------------------- | --------------------- |
 | /signin                               | POST      | NO                                        | NO                    |
