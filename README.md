@@ -32,7 +32,7 @@ Steps after software install:
 > [!NOTE]
 > Routes Table
 | Route                                 | Method    | Required Permission                       | Requires Auth Token   |
-| ------------------------------------- | :-------: | :---------------------------------------: | :-------------------: |
+| ------------------------------------- | --------- | ----------------------------------------- | --------------------- |
 | /signin                               | POST      | NO                                        | NO                    |
 | /signup                               | POST      | NO                                        | NO                    |
 | /api/users                            | GET       | ACCESS_VIEW_USERS                         | YES                   |
@@ -47,3 +47,8 @@ Steps after software install:
 | /api/study-classes                    | POST      | ACCESS_ADD_STUDY_CLASS                    | YES                   |
 | /api/study-classes/{classId}/students | POST      | ACCESS_ADD_STUDENTS_TO_STUDY_CLASS        | YES                   |
 | /api/study-classes/{classId}/students | DELETE    | ACCESS_REMOVE_STUDENTS_FROM_STUDY_CLASS   | YES                   |
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
