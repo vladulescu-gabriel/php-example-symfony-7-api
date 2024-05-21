@@ -1,12 +1,20 @@
-## php-example-symfony-7-api
+### php-example-symfony-7-api
 
-### config:
-- host: local.api.symfony7.com
+> [!IMPORTANT]
+> Use installation guide in order to got the project working
+> Keep in mind that this is a test-project of symfony 7, structure may not be the best
 
-## migration
-using symfony cli or php cli
-- symfony console make:migration -> OR -> php bin/console make:migration
-- symfony console doctrine:migrations:migrate -> OR -> php bin/console doctrine:migrations:migrate 
+> [!NOTE]
+> Installation guide
 
-## Start Up
-docker-compose up -d
+* MacOS: [brew](https://brew.sh/)
+* Windows: [chocolatey](https://chocolatey.org/install)
+
+Required Software:
+* docker + docker-compose (`brew install docker` / `choco install docker-desktop`)
+* make (Windows: `choco install make`, it is readily available on MacOS after installing XCode)
+
+Steps after software install:
+1. Run command: make composer/install
+2. Add to hosts: local.api.symfony7.com (Windows: C:\Windows\System32\drivers\etc\hosts)
+3. Run command: make project/start

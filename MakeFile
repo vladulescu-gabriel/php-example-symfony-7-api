@@ -1,0 +1,11 @@
+project/start:
+	docker-compose up -d
+
+composer/install:
+	docker-compose exec service-php /bin/bash -c "composer install"
+
+migration/create:
+	docker-compose exec service-php /bin/bash -c "php bin/console make:migration"
+
+migration/execute:
+	docker-compose exec service-php /bin/bash -c "php bin/console doctrine:migrations:migrate"
