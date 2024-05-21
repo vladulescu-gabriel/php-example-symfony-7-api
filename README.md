@@ -53,7 +53,19 @@ Steps after software install:
 
 * Request data for routes
 
-| Route                                 | Body Data                                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------------------------- |
-| /signin                               | ```json {"login": "username or email", "password": "password"} ```                        |
-| /signup                               | ```json {"email": "email@email.com", "username": "username", "password": "password"} ```  |
+| Route                                 | Body Data                                                                                                     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| /signin                               | ```json {"login": "username or email", "password": "password"} ```                                            |
+| /signup                               | ```json {"email": "email@email.com", "username": "username", "password": "password"} ```                      |
+| /api/users                            | NOTHING                                                                                                       |
+| /api/users                            | ```json {"email": "email@email.com", "username": "username", "password": "password", "role": "roleName"} ```  |
+| /api/users/{userId}                   | NOTHING                                                                                                       |
+| /api/users/{userId}/{newRole}         | NOTHING                                                                                                       |
+| /api/roles                            | NOTHING                                                                                                       |
+| /api/roles{roleId}                    | NOTHING                                                                                                       |
+| /api/roles                            | ```json {"name": "New Role Name"} ```                                                                         |
+| /api/study-classes                    | NOTHING                                                                                                       |
+| /api/study-classes/{studyClassId}     | NOTHING                                                                                                       |
+| /api/study-classes                    | ```json {"name": "study class Name", "owner_id": "User Id with ACCESS_STUDY_CLASS_OWNER permission"} ```      |
+| /api/study-classes/{classId}/students | ```json {"user_ids": [1,2,3 etc..]} ```                                                                       |
+| /api/study-classes/{classId}/students | ```json {"user_ids": [1,2,3 etc..]} ```                                                                       |
