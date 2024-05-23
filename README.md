@@ -30,7 +30,7 @@ Steps after software install:
 * About Roles and Permissions
     - Default role will always be "student" ( can be changed from constant in Role model )
     - 3 Roles will be aded in "role db table" when command "make migration/execute" it's executed (student, teacher, director)
-    - Permissions will be aded in "permission db table" when command "make migration/execute" it's executed, also the relation between then with roles
+    - Permissions will be aded in "permission db table" when command "make migration/execute" it's executed, also the relation between roles and permissions
     - permissions can be customized for every role, and also needs to be defined as constants in "permission" model in order to use them in code
 ------
 > [!NOTE]
