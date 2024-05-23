@@ -18,7 +18,8 @@ Steps after software install:
 3. Run command: make composer/install
 4. Run command: make migration/execute
 > [Panel PhpMyAdmin](http://localhost:8080) ( pass: password, user: db_user)
-> Mounted on: http://local.api.symfony7.com/
+
+> Api mounted on: http://local.api.symfony7.com/
 ------
 > [!NOTE]
 > Usage Guide
