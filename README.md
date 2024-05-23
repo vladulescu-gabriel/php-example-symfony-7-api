@@ -13,10 +13,12 @@ Required Software:
 * make (Windows: `choco install make`, it is readily available on MacOS after installing XCode)
 
 Steps after software install:
-1. Run command: make composer/install
-2. Add to hosts: local.api.symfony7.com (Windows: C:\Windows\System32\drivers\etc\hosts)
-3. Run command: make migration/execute
-4. Run command: make project/start
+1. Add to hosts: local.api.symfony7.com (Windows: C:\Windows\System32\drivers\etc\hosts)
+2. Run command: make project/start ( database mounted in folder .temp/mysql )
+3. Run command: make composer/install
+4. Run command: make migration/execute
+> [Panel PhpMyAdmin](http://localhost:8080)
+> Mounted on: http://local.api.symfony7.com/
 ------
 > [!NOTE]
 > Usage Guide
@@ -27,7 +29,8 @@ Steps after software install:
 * About Roles and Permissions
     - Default role will always be "student" ( can be changed from constant in Role model )
     - 3 Roles will be aded in "role db table" when command "make migration/execute" it's executed (student, teacher, director)
-    - ( -- needs to to something about permissions migration )
+    - Permissions will be aded in "permission db table" when command "make migration/execute" it's executed, also the relation between then with roles
+    - permissions can be customized for every role, and also needs to be defined as constants in "permission" model in order to use them in code
 ------
 > [!NOTE]
 > Routes Table

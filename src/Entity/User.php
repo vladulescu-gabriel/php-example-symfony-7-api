@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
 #[UniqueEntity('username')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,16 +37,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Type('string')]
     private string $password;
 
-    #[ORM\ManyToMany(targetEntity: StudyClass::class, inversedBy: "users")]
-    private PersistentCollection $studyClasses;
+    #[Assert\Type('string')]
+    private ?string $plainPassword = null;
+
+    #[ORM\ManyToMany(targetEntity: StudyClass::class, mappedBy: "users")]
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: "users")]
-    private Role $role;
-
-    public function __construct()
-    {
-        //$this->studyClasses = new ArrayCollection();
-    }
+    private ?Role $role = null;
 
     public function getId(): int
     {
@@ -69,9 +66,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $email): self
+    public function setUsername(string $username): self
     {
-        $this->email = $email;
+        $this->username = $username;
         return $this;
     }
 
@@ -86,38 +83,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return PersistentCollection|StudyClass[]
-     */
-    public function getStudyClasses(): PersistentCollection
+    public function getPlainPassword(): ?string
     {
-        return $this->studyClasses;
+        return $this->plainPassword;
     }
 
-    public function addStudyClass(StudyClass $studyClass): self
+    public function setPlainPassword(?string $plainPassword): self
     {
-        if (!$this->studyClasses->contains($studyClass)) {
-            $this->studyClasses[] = $studyClass;
-        }
-        return $this;
-    }
-
-    public function removeStudyClass(StudyClass $studyClass): self
-    {
-        $this->studyClasses->removeElement($studyClass);
+        $this->plainPassword = $plainPassword;
         return $this;
     }
 
     // interface methods
-    public function getUserIdentifier(): string
+    public function eraseCredentials(): void
     {
-        return $this->email ?? $this->username;
+        $this->plainPassword = null;
     }
 
-    public function eraseCredentials(): void {}
-    public function getRoles(): array { return []; }
+    public function getRole(): ?Role 
+    {
+        return $this->role;
+    }
 
-    public function setRole(Role $role): self
+    public function setRole(?Role $role): self
     {
         $this->role = $role;
         return $this;

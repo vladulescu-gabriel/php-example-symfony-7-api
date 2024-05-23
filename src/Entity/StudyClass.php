@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,13 +25,11 @@ class StudyClass
     #[Assert\Length(min: 7)]
     private string $name;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'studyClasses')]
-    private ArrayCollection $users;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private ?User $classOwner = null;
 
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    private ?PersistentCollection $users = null;
 
     public function getId(): int
     {
@@ -48,10 +47,21 @@ class StudyClass
         return $this;
     }
 
+    public function getClassOwner(): User
+    {
+        return $this->classOwner;
+    }
+
+    public function setClassOwner(User $classOwner): self
+    {
+        $this->classOwner = $classOwner;
+        return $this;
+    }
+
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public function getUsers(): ?Collection
     {
         return $this->users;
     }
@@ -60,7 +70,6 @@ class StudyClass
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->addStudyClass($this);
         }
 
         return $this;
@@ -68,10 +77,8 @@ class StudyClass
     
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeStudyClass($this);
-        }
-
+        $this->users->removeElement($user);
+        
         return $this;
     }
 }

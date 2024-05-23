@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[UniqueEntity('name')]
 class Role
 {
+    const DEFAULT_ROLE_NAME = 'student';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -24,13 +27,8 @@ class Role
     #[Assert\Length(min: 7)]
     private string $name;
 
-    #[ORM\ManyToMany(targetEntity: Permission::class, mappedBy: 'roles')]
-    private ArrayCollection $permissions;
-
-    public function __construct()
-    {
-        $this->permissions = new ArrayCollection();
-    }
+    #[ORM\ManyToMany(targetEntity: Permission::class)]
+    private PersistentCollection $permissions;
 
     public function getId(): int
     {
@@ -60,7 +58,6 @@ class Role
     {
         if (!$this->permissions->contains($permission)) {
             $this->permissions[] = $permission;
-            $permission->addRole($this);
         }
 
         return $this;
@@ -68,10 +65,7 @@ class Role
     
     public function removePermission(Permission $permission): self
     {
-        if ($this->permissions->removeElement($permission)) {
-            $permission->removeRole($this);
-        }
-
+        $this->permissions->removeElement($permission);
         return $this;
     }
 }

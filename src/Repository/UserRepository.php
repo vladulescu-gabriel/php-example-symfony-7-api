@@ -37,4 +37,15 @@ final class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllByIds(array $ids): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.id IN (:ids)')
+            ->setParameters(new ArrayCollection([
+                new Parameter('ids', $ids)
+            ]))
+            ->getQuery()
+            ->getResult();
+    }
 }

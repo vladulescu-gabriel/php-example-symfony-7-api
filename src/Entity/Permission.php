@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PermissionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +11,22 @@ use Doctrine\ORM\Mapping as ORM;
 #[UniqueEntity('name')]
 class Permission
 {
+    const PERMISSION_KEY = 'ACCESS';
+    const ACCESS_VIEW_USERS = 'ACCESS_VIEW_USERS';
+    const ACCESS_ADD_USER = 'ACCESS_ADD_USER';
+    const ACCESS_VIEW_USER = 'ACCESS_VIEW_USER';
+    const ACCESS_VIEW_ROLES = 'ACCESS_VIEW_ROLES';
+    const ACCESS_VIEW_ROLE = 'ACCESS_VIEW_ROLE';
+    const ACCESS_ADD_ROLE = 'ACCESS_ADD_ROLE';
+    const ACCESS_CHANGE_ROLE = 'ACCESS_CHANGE_ROLE';
+    const ACCESS_VIEW_STUDY_CLASSES = 'ACCESS_VIEW_STUDY_CLASSES';
+    const ACCESS_VIEW_STUDY_CLASS = 'ACCESS_VIEW_STUDY_CLASS';
+    const ACCESS_ADD_STUDY_CLASS = 'ACCESS_ADD_STUDY_CLASS';
+    const ACCESS_ADD_STUDENTS_TO_STUDY_CLASS = 'ACCESS_ADD_STUDENTS_TO_STUDY_CLASS';
+    const ACCESS_REMOVE_STUDENTS_FROM_STUDY_CLASS = 'ACCESS_REMOVE_STUDENTS_FROM_STUDY_CLASS';
+    const ACCESS_STUDY_CLASS_OWNER = 'ACCESS_STUDY_CLASS_OWNER';
+    const ACCESS_STUDY_CLASS_MEMBER = 'ACCESS_STUDY_CLASS_MEMBER';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,12 +39,6 @@ class Permission
     private string $name;
 
     #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions')]
-    private ArrayCollection $roles;
-
-    public function __construct()
-    {
-        $this->roles = new ArrayCollection();
-    }
 
     public function getId(): int
     {
@@ -45,33 +53,6 @@ class Permission
     public function setName(string $name): self
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRoles(): Collection
-    {
-        return $this->roles;
-    }
-
-    public function addRole(Role $role): self
-    {
-        if (!$this->roles->contains($role)) {
-            $this->roles[] = $role;
-            $role->addPermission($this);
-        }
-
-        return $this;
-    }
-    
-    public function removeRole(Role $role): self
-    {
-        if ($this->roles->removeElement($role)) {
-            $role->removePermission($this);
-        }
-
         return $this;
     }
 }

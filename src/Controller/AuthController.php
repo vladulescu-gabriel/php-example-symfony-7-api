@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Exception\RequestException;
 use App\Service\AuthService;
 use App\Service\UserService;
 use App\Validator\LoginValidator;
+use App\Validator\RegisterValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -18,24 +18,20 @@ class AuthController extends AbstractController
     public function __construct(
         private AuthService $authService,
         private UserService $userService,
-        private LoginValidator $loginValidator
+        private LoginValidator $loginValidator,
+        private RegisterValidator $registerValidator
     ) {
     }
 
     #[Route('/signup', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(Request $request): Response
     {
-        $data = json_decode($request->getContent());
-        
-        if (!$data->email || !$data->username || !$data->password) {
-            throw new RequestException('Login and password required');
-        }
-
-        $newUser = $this->userService->addUser($data->email, $data->username, $data->password, $passwordHasher);
+        $requestUser = $this->registerValidator->validate($request);
+        $newUser = $this->userService->addUser($requestUser);
         $token = $this->authService->setAuthUser($newUser);
 
         return ResponseProcessor::send([
-            "Auth Token" => $token
+            "Token" => $token
         ]);
     }
 
@@ -46,7 +42,7 @@ class AuthController extends AbstractController
         $token = $this->authService->setAuthUser($user);
 
         return ResponseProcessor::send([
-            "AuthToken" => $token
+            "Token" => $token
         ]);
     }
 }

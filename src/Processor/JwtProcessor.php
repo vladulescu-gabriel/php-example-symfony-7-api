@@ -3,6 +3,7 @@
 namespace App\Processor;
 
 use DateTimeImmutable;
+use App\Exception\AuthorizationException;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -16,6 +17,8 @@ use Lcobucci\JWT\UnencryptedToken;
 
 class JwtProcessor
 {
+    const TOKEN_IDENTIFIER = '321dnlrnf2lkfn';
+    const TOKEN_EXPIRE_TIME = '1 min';
 
     public function encode(array $data)
     {
@@ -26,37 +29,18 @@ class JwtProcessor
             
             $now   = new DateTimeImmutable();
             $token = $tokenBuilder
-                // Configures the issuer (iss claim)
-                ->issuedBy('http://example.com')
-                // Configures the audience (aud claim)
-                ->permittedFor('http://example.org')
-                // Configures the subject of the token (sub claim)
                 ->relatedTo(json_encode($data))
-                // Configures the id (jti claim)
-                ->identifiedBy('4f1g23a12aa')
-                // Configures the time that the token was issue (iat claim)
+                ->identifiedBy(self::TOKEN_IDENTIFIER)
                 ->issuedAt($now)
-                // Configures the time that the token can be used (nbf claim)
-                ->canOnlyBeUsedAfter($now->modify('+1 minute'))
-                // Configures the expiration time of the token (exp claim)
-                ->expiresAt($now->modify('+1 hour'))
-                // Configures a new claim, called "uid"
-                ->withClaim('uid', 1)
-                // Configures a new header, called "foo"
-                ->withHeader('foo', 'bar')
-                // Builds a new token
+                ->expiresAt($now->modify('+'.self::TOKEN_EXPIRE_TIME))
                 ->getToken($algorithm, $signingKey);
             
             return $token->toString();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('An error occurred while trying to encode the JWT token.');
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decode($token): UnencryptedToken
     {
         $parser = new Parser(new JoseEncoder());
@@ -64,9 +48,15 @@ class JwtProcessor
         try {
             $token = $parser->parse($token);
         } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound $e) {
-            echo 'Oh no, an error: ' . $e->getMessage();
+            throw new AuthorizationException('Token tempered, error at decoding');
         }
-        assert($token instanceof UnencryptedToken);
+
+        $timeNow = (new DateTimeImmutable())->getTimestamp();
+        $tokenDate = $token->claims()->get('exp')->getTimestamp();
+
+        if ($tokenDate < $timeNow) {
+            throw new AuthorizationException('Token has expired !');
+        }
         
         return $token;
     }

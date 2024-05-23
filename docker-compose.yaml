@@ -29,7 +29,7 @@ services:
     networks: 
       - local-network
     environment:
-      DATABASE_URL: mysql://${DB_USER}:${DB_PASS}@service-database:3306/${DB_NAME}?serverVersion=8.0
+      DATABASE_URL: mysql://${DB_USER}:${DB_PASS}@service-database:3306/${DB_NAME}?serverVersion=8.0.32
     build:
       context: ./
       dockerfile: ./docker/php/Dockerfile
@@ -39,8 +39,8 @@ services:
       - 9000:80
   service-database:
     container_name: service-database
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
     networks:
       - local-network
     environment:
@@ -63,3 +63,26 @@ services:
         PMA_HOST: service-database
       ports:
         - 8080:80
+###> doctrine/doctrine-bundle ###
+  database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###

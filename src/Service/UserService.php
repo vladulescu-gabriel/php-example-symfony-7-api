@@ -3,13 +3,18 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Processor\SerializeProcessor;
 use App\Repository\UserRepository;
+use App\Service\RoleService;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
     public function __construct(
-        private UserRepository $userRepository
+        private RoleService $roleService,
+        private UserRepository $userRepository,
+        private UserPasswordHasherInterface $passwordHasher,
+        private SerializeProcessor $serializer
     ) {
     }
 
@@ -28,16 +33,28 @@ class UserService
         return $this->userRepository->findAll();
     }
 
-    public function addUser(string $email, string $username, string $plainPassword, UserPasswordHasherInterface $hasher): User
+    public function getMultipleById(array $ids): array
     {
+        return $this->userRepository->findAllByIds($ids);
+    }
 
-        $user = new User();
-        $user->setEmail($email)
-            ->setUsername($username);
+    public function addUser(User $newUser): User
+    {
+        $encryptedPassword = $this->passwordHasher->hashPassword($newUser, $newUser->getPlainPassword());
+        $newUser->setPassword($encryptedPassword)
+            ->eraseCredentials();
 
-        $encryptedPassword = $hasher->hashPassword($user, $plainPassword);
-        $user->setPassword($encryptedPassword);
+        if (!$newUser->getRole() instanceof Role) {
+            $newUser->setRole($this->roleService->getDefaultRole());
+        }
 
+        $this->userRepository->save($newUser);
+
+        return $newUser;
+    }
+
+    public function updateUser(User $user): User
+    {
         $this->userRepository->save($user);
 
         return $user;
