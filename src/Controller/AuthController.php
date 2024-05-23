@@ -8,7 +8,6 @@ use App\Validator\LoginValidator;
 use App\Validator\RegisterValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;     
 use Symfony\Component\HttpFoundation\Response;
 use App\Processor\ResponseProcessor;
