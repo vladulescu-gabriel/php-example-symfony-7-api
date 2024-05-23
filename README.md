@@ -17,7 +17,7 @@ Steps after software install:
 2. Run command: make project/start ( database mounted in folder .temp/mysql )
 3. Run command: make composer/install
 4. Run command: make migration/execute
-> [Panel PhpMyAdmin](http://localhost:8080)
+> [Panel PhpMyAdmin](http://localhost:8080) ( pass: password, user: db_user)
 > Mounted on: http://local.api.symfony7.com/
 ------
 > [!NOTE]
