@@ -4,11 +4,14 @@ namespace App\Validator;
 
 use App\Entity\User;
 use App\Exception\RequestException;
+use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegisterValidator
 {
-    public function __construct() {}
+    public function __construct(
+        private UserService $userService
+    ) {}
     
     public function validate(Request $request): User
     {
@@ -20,6 +23,12 @@ class RegisterValidator
         
         if (strlen($data->password) < 8) {
             throw new RequestException('Password needs to be more or equal with 8 characters');
+        }
+
+        $existingUser = $this->userService->getLoginUserByBothVariants($data->username, $data->email);
+
+        if ($existingUser instanceof User) {
+            throw new RequestException('Email or Username already used');
         }
 
         $newUser = new User();

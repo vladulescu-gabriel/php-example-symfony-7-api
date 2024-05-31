@@ -25,6 +25,19 @@ final class UserRepository extends ServiceEntityRepository
         $this->entityManager->flush();
     }
 
+    public function searchByBothLoginVariants(string $username, string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->orWhere('u.username = :username')
+            ->setParameters(new ArrayCollection([
+                new Parameter('email', $email),
+                new Parameter('username', $username)
+            ]))
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function searchByLoginVariants(string $login): ?User
     {
         return $this->createQueryBuilder('u')

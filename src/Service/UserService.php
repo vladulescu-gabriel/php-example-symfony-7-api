@@ -18,6 +18,11 @@ class UserService
     ) {
     }
 
+    public function getLoginUserByBothVariants(string $username, string $email): ?User
+    {
+        return $this->userRepository->searchByBothLoginVariants($username, $email);
+    }
+
     public function getLoginUser(string $login): ?User
     {
         return $this->userRepository->searchByLoginVariants($login);
