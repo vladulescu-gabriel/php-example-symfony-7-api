@@ -18,7 +18,7 @@ use Lcobucci\JWT\UnencryptedToken;
 class JwtProcessor
 {
     const TOKEN_IDENTIFIER = '321dnlrnf2lkfn';
-    const TOKEN_EXPIRE_TIME = '1 min';
+    const TOKEN_EXPIRE_TIME = '30 min';
 
     public function encode(array $data)
     {
